@@ -83,25 +83,25 @@ Untuk membangun representasi *Digital Twin* yang akurat, diimplementasikan beber
 
 ### 5.1 Break Duration
 Durasi istirahat non-produktif namun menyegarkan dihitung berdasarkan sisa siklus waktu aktif harian seseorang:
-$$\text{break\_duration} = 24 - \left(\text{sleep\_duration} + \text{study\_work\_duration} + \text{downtime\_duration} + \frac{\text{exercise\_duration}}{60}\right)$$
-*Nilai dipotong secara logis pada rentang $[0, 6]$ jam.*
+$$\text{Break Duration} = 24 - \left(\text{Sleep Duration} + \text{Study Work Duration} + \text{Downtime Duration} + \frac{\text{Exercise Duration}}{60}\right)$$
+*Nilai dipotong secara logis pada rentang [0, 6] jam.*
 
 ### 5.2 Task Planned & Completion Ratio
 Jumlah tugas yang direncanakan disintesis secara proporsional terhadap durasi kerja pengguna:
-$$\text{task\_planned} = \text{clip}(\text{round}(\text{study\_work\_duration} \times 1.2), 3, 15)$$
-$$\text{completion\_ratio} = \frac{\text{task\_completed}}{\text{task\_planned}}$$
+$$\text{Task Planned} = \text{clip}\left(\text{round}\left(\text{Study Work Duration} \times 1.2\right), 3, 15\right)$$
+$$\text{Completion Ratio} = \frac{\text{Task Completed}}{\text{Task Planned}}$$
 
 ### 5.3 Productivity Score
 Skor produktivitas komprehensif $[0-100]$ dirancang menggunakan teknik pembobotan multi-kriteria (*multi-criteria weighted index*) berdasarkan kontribusi masing-masing aktivitas harian:
-$$\text{productivity\_score} = \left( 0.341 \times \text{completion\_ratio} + 0.224 \times \frac{\text{focus\_score}}{10} + 0.152 \times \frac{\text{break\_duration}}{6} + 0.067 \times \frac{\text{sleep\_duration}}{\text{sleep\_max}} + 0.064 \times \frac{10 - \text{stress\_level}}{10} + 0.063 \times \left(1 - \frac{\text{downtime\_duration}}{24}\right) + 0.054 \times \frac{\text{exercise\_duration}}{\text{exercise\_max}} + 0.034 \times \frac{\text{mood\_score}}{10} \right) \times 100$$
+$$\text{Productivity Score} = \left( 0.341 \times \text{Completion Ratio} + 0.224 \times \frac{\text{Focus Score}}{10} + 0.152 \times \frac{\text{Break Duration}}{6} + 0.067 \times \frac{\text{Sleep Duration}}{\text{Sleep Max}} + 0.064 \times \frac{10 - \text{Stress Level}}{10} + 0.063 \times \left(1 - \frac{\text{Downtime Duration}}{24}\right) + 0.054 \times \frac{\text{Exercise Duration}}{\text{Exercise Max}} + 0.034 \times \frac{\text{Mood Score}}{10} \right) \times 100$$
 *Skor kemudian dihaluskan (*smoothed*) menggunakan teknik **3-day rolling mean** per pengguna untuk meminimalkan fluktuasi harian acak dan menangkap tren produktivitas riil.*
 
 ### 5.4 Fatigue Index & Cumulative Fatigue
 Indeks kelelahan harian dirancang untuk memantau beban fisik dan mental pengguna:
-$$\text{fatigue\_index} = 40 \times \left(\frac{\text{stress\_level}}{\text{stress\_max}}\right) + 30 \times \left(\frac{\text{downtime\_duration}}{\text{downtime\_max}}\right) + 30 \times \left(\frac{\text{study\_work\_duration}}{\text{study\_max}}\right)$$
+$$\text{Fatigue Index} = 40 \times \left(\frac{\text{Stress Level}}{\text{Stress Max}}\right) + 30 \times \left(\frac{\text{Downtime Duration}}{\text{Downtime Max}}\right) + 30 \times \left(\frac{\text{Study Work Duration}}{\text{Study Max}}\right)$$
 
 Untuk menghitung akumulasi kelelahan multi-hari, diterapkan metode **Exponential Moving Average (EMA)** dengan koefisien peluruhan (*decay factors*) pemulihan sebesar 10% per hari:
-$$\text{cumulative\_fatigue}_t = 0.10 \times \text{fatigue\_index}_t + 0.90 \times \text{cumulative\_fatigue}_{t-1}$$
+$$\text{Cumulative Fatigue}(t) = 0.10 \times \text{Fatigue Index}(t) + 0.90 \times \text{Cumulative Fatigue}(t-1)$$
 
 ### 5.5 Validasi Hubungan Fitur
 Berdasarkan uji statistik korelasi Pearson, ditemukan **korelasi negatif yang signifikan sebesar -0.3926** antara `productivity_score` dan `fatigue_index` dengan *p-value* = 0.0000. Hal ini memvalidasi secara ilmiah logika sistem: **semakin tinggi tingkat kelelahan akumulatif seseorang, maka performa produktivitasnya akan menurun secara signifikan**.

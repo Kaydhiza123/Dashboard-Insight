@@ -1,7 +1,7 @@
 # 🧠 Smart Digital Twin System for Personal Productivity Prediction
 **Capstone Project — Data Science & Machine Learning**
 
-Dashboard Interaktif: [Link Dashboard Streamlit Proyek](https://dashboard-insight-bgexl5aecgppa9kfdxdkfu.streamlit.app/)
+Dashboard Interaktif: [Link Dashboard Streamlit Proyek](https://dashboard-capstone-psu061.streamlit.app/)
 
 ---
 

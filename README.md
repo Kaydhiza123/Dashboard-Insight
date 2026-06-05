@@ -84,6 +84,7 @@ Untuk membangun representasi *Digital Twin* yang akurat, diimplementasikan beber
 ### 5.1 Break Duration
 Durasi istirahat non-produktif namun menyegarkan dihitung berdasarkan sisa siklus waktu aktif harian seseorang:
 $$\text{Break Duration} = 24 - \left(\text{Sleep Duration} + \text{Study Work Duration} + \text{Downtime Duration} + \frac{\text{Exercise Duration}}{60}\right)$$
+
 *Nilai dipotong secara logis pada rentang [0, 6] jam.*
 
 ### 5.2 Task Planned & Completion Ratio

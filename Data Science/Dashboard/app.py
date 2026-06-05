@@ -20,7 +20,7 @@ st.set_page_config(
 @st.cache_data
 def load_data():
     # MEMPERBAIKI SPASI PADA NAMA FILE
-    df = pd.read_csv(r"C:\Users\Acer\Documents\Dicoding\Capstone\Data Science\Dataset\final_dataset_model_ready.csv")
+    df = pd.read_csv("final_dataset_model_ready.csv")
     df['date'] = pd.to_datetime(df['date'])
     df['day_of_week'] = df['date'].dt.day_name()
     

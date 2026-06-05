@@ -25,6 +25,7 @@ def load_data():
     csv_path = base_dir.parent / "Dataset" / "final_dataset_model_ready.csv"
 
     df = pd.read_csv(csv_path)
+    print(df.columns.tolist())
 
     df['date'] = pd.to_datetime(df['date'])
     df['day_of_week'] = df['date'].dt.day_name()

@@ -1,3 +1,4 @@
+from pathlib import Path
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -19,14 +20,18 @@ st.set_page_config(
 # ==========================================
 @st.cache_data
 def load_data():
-    df = pd.read_csv('../Dataset/final_dataset_model_ready.csv')
-    
+    base_dir = Path(__file__).resolve().parent
+
+    csv_path = base_dir.parent / "Dataset" / "final_dataset_model_ready.csv"
+
+    df = pd.read_csv(csv_path)
+
     df['date'] = pd.to_datetime(df['date'])
     df['day_of_week'] = df['date'].dt.day_name()
-    
+
     label_map = {0: 'At Risk', 1: 'Steady', 2: 'Thriving'}
-    df['productivity_status'] = df['productivity_label'].map(label_map)
-    
+    df['productivity_status'] = df['productivity_label~'].map(label_map)
+
     return df
 
 # Memanggil fungsi untuk memuat data asli

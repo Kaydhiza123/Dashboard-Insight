@@ -19,16 +19,12 @@ st.set_page_config(
 # ==========================================
 @st.cache_data
 def load_data():
-    # Membaca file CSV asli hasil notebook Anda
-    df = pd.read_csv("final_dataset_model_ready.csv")
+    # MEMPERBAIKI SPASI PADA NAMA FILE
+    df = pd.read_csv("../Dataset/final_dataset_model_ready.csv")
     
-    # Mengonversi tipe data kolom date menjadi datetime
     df['date'] = pd.to_datetime(df['date'])
-    
-    # Membuat kolom nama hari untuk analisis temporal mingguan
     df['day_of_week'] = df['date'].dt.day_name()
     
-    # Memetakan angka 0, 1, 2 menjadi teks agar grafik mudah dibaca
     label_map = {0: 'At Risk', 1: 'Steady', 2: 'Thriving'}
     df['productivity_status'] = df['productivity_label'].map(label_map)
     
@@ -46,12 +42,20 @@ st.sidebar.write("Personal Productivity Prediction Dashboard")
 
 st.sidebar.markdown("---")
 st.sidebar.subheader("Filter Analisis Temporal")
-start_date = st.sidebar.date_input("Tanggal Mulai", df['date'].min().date())
-end_date = st.sidebar.date_input("Tanggal Selesai", df['date'].max().date())
 
-# Filter data berdasarkan rentang tanggal yang dipilih user di sidebar
-mask = (df['date'].dt.date >= start_date) & (df['date'].dt.date <= end_date)
+# KONVERSI KE PANDAS DATETIME AGAR SINKRON DENGAN DATAFRAME
+start_date = pd.to_datetime(st.sidebar.date_input("Tanggal Mulai", df['date'].min().date()))
+end_date = pd.to_datetime(st.sidebar.date_input("Tanggal Selesai", df['date'].max().date()))
+
+# PROSES FILTERING YANG LEBIH AMAN
+mask = (df['date'] >= start_date) & (df['date'] <= end_date)
 df_filtered = df.loc[mask]
+
+# ANTISIPASI DATA KOSONG
+if df_filtered.empty:
+    st.sidebar.error("Kesalahan: Tanggal Mulai harus lebih kecil dari Tanggal Selesai!")
+    st.error("⚠️ Tidak ada data untuk ditampilkan. Silakan sesuaikan filter tanggal di sidebar.")
+    st.stop()
 
 # ==========================================
 # 4. KONTEN UTAMA DASHBOARD
